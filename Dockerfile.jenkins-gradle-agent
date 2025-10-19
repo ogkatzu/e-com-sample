@@ -1,0 +1,35 @@
+FROM jenkins/inbound-agent:latest
+
+USER root
+
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y wget unzip curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Java 17 manually from Adoptium
+ENV JAVA_VERSION=17.0.9+9
+RUN wget -O /tmp/jdk.tar.gz https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.9%2B9/OpenJDK17U-jdk_aarch64_linux_hotspot_17.0.9_9.tar.gz && \
+    mkdir -p /opt/java/openjdk && \
+    tar -xzf /tmp/jdk.tar.gz -C /opt/java/openjdk --strip-components=1 && \
+    rm /tmp/jdk.tar.gz
+
+# Set Java 17 as default
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Install Gradle 8.5
+ENV GRADLE_VERSION=8.5
+RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -P /tmp && \
+    unzip -d /opt/gradle /tmp/gradle-${GRADLE_VERSION}-bin.zip && \
+    rm /tmp/gradle-${GRADLE_VERSION}-bin.zip && \
+    ln -s /opt/gradle/gradle-${GRADLE_VERSION}/bin/gradle /usr/local/bin/gradle
+
+# Verify installations
+RUN java -version && gradle --version
+
+# Switch back to jenkins user
+USER jenkins
+
+# Set working directory
+WORKDIR /home/jenkins

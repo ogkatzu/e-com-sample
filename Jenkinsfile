@@ -43,7 +43,7 @@ pipeline{
                         buildReactService('store-ui')
                     }
                 }
-                stage("Buils search Service"){
+                stage("Build search Service"){
                     agent any
                     when {
                         expression { changedServices.contains('search') }
@@ -63,6 +63,18 @@ pipeline{
                     steps {
                         sh 'echo "========Building cart Service ========"'
                         buildJavaService('cart-cna-microservice')
+                    }
+                }
+                stage("Build Users Service") {
+                    agent {
+                        label 'python'
+                    }
+                    when {
+                        expression { changedServices.contains('users') }
+                    }
+                    steps {
+                        sh 'echo "========Building Users Service ========"'
+                        buildNodeService('users-cna-microservice')
                     }
                 }
             }
