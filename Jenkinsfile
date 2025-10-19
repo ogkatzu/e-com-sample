@@ -26,7 +26,7 @@ pipeline{
                     }
                     if (changedServices.contains(store-ui)) {
                         sh 'echo "========Building UI Service ========"'
-                        buildReractService()
+                        buildReactService()
                     }
                     else{
                         sh 'echo "========No services to build ========"'
