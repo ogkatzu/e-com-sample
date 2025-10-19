@@ -19,16 +19,18 @@ pipeline{
         }
         stage("Build"){
             steps{
-                if (changedServices.contains('products')) {
-                    sh 'echo "========Building Node Service ========"'
-                    buildNodeService()
-                }
-                if (changedServices.contains(store-ui)) {
-                    sh 'echo "========Building UI Service ========"'
-                    buildReractService()
-                }
-                else{
-                    sh 'echo "========No services to build ========"'
+                script{
+                    if (changedServices.contains('products')) {
+                        sh 'echo "========Building Node Service ========"'
+                        buildNodeService()
+                    }
+                    if (changedServices.contains(store-ui)) {
+                        sh 'echo "========Building UI Service ========"'
+                        buildReractService()
+                    }
+                    else{
+                        sh 'echo "========No services to build ========"'
+                    }
                 }
             }
         }
