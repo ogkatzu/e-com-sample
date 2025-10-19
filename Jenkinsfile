@@ -26,7 +26,6 @@ pipeline{
                     when {
                         expression { changedServices.contains('products') }
                     }
-                    agent any
                     steps {
                         script{
                             sh 'echo "========Building Products Service ========"'
