@@ -1,15 +1,17 @@
 @Library('shared-library') _
 
 pipeline{
-    agent any
+    agent none
     
     stages{
         stage("Checkout"){
+            agent any
             steps{
                 checkout scm
             }
         }
         stage("Get Changed Services"){
+            agent any
             steps{
                 script{
                     changedServices = getChangedServices()
@@ -17,23 +19,49 @@ pipeline{
                 }
             }
         }
-        stage("Build and Unit Test Services"){
-            steps{
-                script{
-                    if (changedServices.contains('products')) {
-                        sh 'echo "========Building Products Service ========"'
-                        buildNodeService('products-cna-microservice')
+        stage("Build and Unit Test Javascript Services"){
+            parallel{
+                stage("Build products Service"){
+                    agent any
+                    when {
+                        expression { changedServices.contains('products') }
                     }
-                    if (changedServices.contains('cart')) {
-                        sh 'echo "========Building Cart Service ========"'
+                    agent any
+                    steps {
+                        script{
+                            sh 'echo "========Building Products Service ========"'
+                            buildNodeService('products-cna-microservice')
+                        }
+                    }
+                }
+                stage("Build UI Service") {
+                    agent any
+                    when {
+                        expression { changedServices.contains('store-ui') }
+                    }
+                    steps {
+                        sh 'echo "========Building UI Service ========"'
+                        buildReactService('store-ui')
+                    }
+                }
+                stage("Buils search Service"){
+                    agent any
+                    when {
+                        expression { changedServices.contains('search') }
+                    }
+                    steps {
+                        sh 'echo "========Building search Service ========"'
                         buildNodeService('search-cna-microservice')
                     }
-                    if (changedServices.contains('store-ui')) {
-                        sh 'echo "========Building UI Service ========"'
-                        buildReactService()
+                }
+                stage("Build cart Service"){
+                    agent jdk-17
+                    when {
+                        expression { changedServices.contains('cart') }
                     }
-                    else{
-                        sh 'echo "========No services to build ========"'
+                    steps {
+                        sh 'echo "========Building cart Service ========"'
+                        buildJavaService('cart-cna-microservice')
                     }
                 }
             }
