@@ -46,5 +46,3 @@ For Windows,
 
 Build docker image,
 `docker build -t products:latest .`
-
-Added for testing, done

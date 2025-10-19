@@ -17,7 +17,7 @@ pipeline{
                 }
             }
         }
-        stage("Build"){
+        stage("Build and Unit Test Services"){
             steps{
                 script{
                     if (changedServices.contains('products')) {
