@@ -40,3 +40,5 @@ For Windows,
 
 Build docker image,
 `docker build -t store-ui:latest .`
+
+addint for testing
