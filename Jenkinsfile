@@ -24,7 +24,7 @@ pipeline{
                         sh 'echo "========Building Node Service ========"'
                         buildNodeService()
                     }
-                    if (changedServices.contains(store-ui)) {
+                    if (changedServices.contains('store-ui')) {
                         sh 'echo "========Building UI Service ========"'
                         buildReactService()
                     }
