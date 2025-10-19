@@ -7,6 +7,8 @@ pipeline{
         stage("Build"){
             steps{
                 sh 'echo "========Building Node Service ========"'
+                sh 'pwd'
+                sh 'ls -lah'
                 sh 'cd /var/jenkins_home/workspace/e-commerce-microservices-sample/cart-cna-microservice && ls -la'
                 buildNodeService()
             }
