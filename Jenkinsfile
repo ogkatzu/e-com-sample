@@ -74,7 +74,7 @@ pipeline{
                     }
                     steps {
                         sh 'echo "========Building Users Service ========"'
-                        buildNodeService('users-cna-microservice')
+                        buildPythonService('users-cna-microservice')
                     }
                 }
             }
