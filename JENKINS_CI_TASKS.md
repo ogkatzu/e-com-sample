@@ -5,17 +5,17 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 ## Phase 1: Jenkins Shared Library Setup
 
 ### Task 1: Set up Jenkins Shared Library repository structure
-- [ ] Create new Git repository for Jenkins Shared Library
-- [ ] Create `vars/` directory for global variables and functions
-- [ ] Create `src/` directory for Groovy classes (optional, for complex logic)
-- [ ] Create `resources/` directory for non-Groovy files (scripts, configs)
+- [x] Create new Git repository for Jenkins Shared Library
+- [x] Create `vars/` directory for global variables and functions
+- [x] Create `src/` directory for Groovy classes (optional, for complex logic)
+- [x] Create `resources/` directory for non-Groovy files (scripts, configs)
 - [ ] Initialize with README.md documenting the library structure
 - [ ] Set up version control and branching strategy
 
 ### Task 2: Create buildNodeService() function in Shared Library
 - [ ] Create `vars/buildNodeService.groovy` file
-- [ ] Implement npm install step
-- [ ] Implement npm run lint step (if applicable)
+- [x] Implement npm install step
+- [x] Implement npm run lint step (if applicable)
 - [ ] Implement npm test step
 - [ ] Add error handling and logging
 - [ ] Accept parameters for service name and working directory

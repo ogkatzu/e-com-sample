@@ -1,0 +1,94 @@
+FROM jenkins/jenkins:lts
+
+USER root
+
+# Install basic utilities
+RUN apt-get update && apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+    software-properties-common \
+    vim \
+    git \
+    wget \
+    unzip \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Docker CLI
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null && \
+    apt-get update && \
+    apt-get install -y docker-ce-cli && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Node.js 18.x
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Java 17 (in addition to Java 11 that comes with Jenkins)
+RUN apt-get update && \
+    apt-get install -y openjdk-17-jdk && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Python 3 and pipenv
+RUN apt-get update && \
+    apt-get install -y python3 python3-pip python3-venv && \
+    pip3 install --no-cache-dir --break-system-packages pipenv && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Gradle (for cart-cna-microservice)
+ENV GRADLE_VERSION=8.5
+RUN wget https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip -P /tmp && \
+    unzip -d /opt/gradle /tmp/gradle-${GRADLE_VERSION}-bin.zip && \
+    rm /tmp/gradle-${GRADLE_VERSION}-bin.zip && \
+    ln -s /opt/gradle/gradle-${GRADLE_VERSION}/bin/gradle /usr/local/bin/gradle
+
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/arm64/kubectl" && \
+    chmod +x kubectl && \
+    mv kubectl /usr/local/bin/
+
+# Install Kind (Kubernetes in Docker)
+RUN curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-arm64 && \
+    chmod +x ./kind && \
+    mv ./kind /usr/local/bin/kind
+
+# Install Kustomize (for Kubernetes manifests)
+RUN curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash && \
+    mv kustomize /usr/local/bin/
+
+# Create directory for Jenkins scripts
+RUN mkdir -p /usr/local/bin/jenkins-scripts
+
+# Set environment variables
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-arm64
+ENV PATH="${JAVA_HOME}/bin:${PATH}"
+
+# Add jenkins user to docker group (if needed)
+RUN groupadd -f docker && usermod -aG docker jenkins
+
+# Switch back to jenkins user
+USER jenkins
+
+# Skip initial setup wizard (optional - comment out if you want the setup wizard)
+ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
+
+# Install recommended Jenkins plugins
+RUN jenkins-plugin-cli --plugins \
+    git \
+    github \
+    github-branch-source \
+    workflow-aggregator \
+    docker-workflow \
+    kubernetes \
+    kubernetes-cli \
+    pipeline-stage-view \
+    blueocean \
+    credentials-binding \
+    configuration-as-code
+
+# Expose ports
+EXPOSE 8080 50000

@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile.jenkins
+    image: jenkins-microservices:latest
+    container_name: jenkins
+    privileged: true
+    user: root
+    ports:
+      - "8080:8080"      # Jenkins Web UI
+      - "50000:50000"    # Jenkins agent communication
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock  # Docker socket for Docker-in-Docker
+      - ./jenkins-scripts:/usr/local/bin/jenkins-scripts  # Custom scripts
+    environment:
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false  # Optional: skip setup wizard
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    networks:
+      - jenkins
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+
+volumes:
+  jenkins_home:
+    driver: local
+  # jenkins-docker-certs:  # Uncomment if using DinD
+  #   driver: local
+
+networks:
+  jenkins:
+    driver: bridge
