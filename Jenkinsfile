@@ -9,7 +9,7 @@ pipeline{
                 sh 'echo "========Building Node Service ========"'
                 sh 'pwd'
                 sh 'ls -lah'
-                sh 'cd cart-cna-microservice && ls -la'
+                sh 'cd products-cna-microservice && ls -la'
                 buildNodeService()
             }
         }
