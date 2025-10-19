@@ -4,12 +4,22 @@ pipeline{
     agent any
     
     stages{
+        stage("Checkout"){
+            steps{
+                checkout scm
+            }
+        }
+        stage("Get Changed Services"){
+            steps{
+                script{
+                    changedServices = getChangedServices()
+                    echo "Services to build: ${changedServices}"
+                }
+            }
+        }
         stage("Build"){
             steps{
                 sh 'echo "========Building Node Service ========"'
-                sh 'pwd'
-                sh 'ls -lah'
-                sh 'cd products-cna-microservice && ls -la'
                 buildNodeService()
             }
         }

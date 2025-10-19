@@ -13,7 +13,7 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 - [ ] Set up version control and branching strategy
 
 ### Task 2: Create buildNodeService() function in Shared Library
-- [ ] Create `vars/buildNodeService.groovy` file
+- [x] Create `vars/buildNodeService.groovy` file
 - [x] Implement npm install step
 - [x] Implement npm run lint step (if applicable)
 - [ ] Implement npm test step
@@ -40,7 +40,7 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 - [ ] Document function usage in comments
 
 ### Task 5: Create buildReactUI() function in Shared Library
-- [ ] Create `vars/buildReactUI.groovy` file
+- [x] Create `vars/buildReactUI.groovy` file
 - [ ] Implement npm install step
 - [ ] Implement npm test step
 - [ ] Implement npm run build step for production bundle
