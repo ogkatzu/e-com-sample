@@ -55,7 +55,9 @@ pipeline{
                     }
                 }
                 stage("Build cart Service"){
-                    agent jdk-17
+                    agent {
+                        label 'jdk-17'
+                    }
                     when {
                         expression { changedServices.contains('cart') }
                     }
