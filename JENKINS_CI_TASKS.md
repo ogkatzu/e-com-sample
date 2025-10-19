@@ -16,7 +16,6 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 - [x] Create `vars/buildNodeService.groovy` file
 - [x] Implement npm install step
 - [x] Implement npm run lint step (if applicable)
-- [ ] Implement npm test step
 - [ ] Add error handling and logging
 - [ ] Accept parameters for service name and working directory
 - [ ] Document function usage in comments
@@ -41,9 +40,9 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 
 ### Task 5: Create buildReactUI() function in Shared Library
 - [x] Create `vars/buildReactUI.groovy` file
-- [ ] Implement npm install step
-- [ ] Implement npm test step
-- [ ] Implement npm run build step for production bundle
+- [x] Implement npm install step
+- [x] Implement npm test step
+- [x] Implement npm run build step for production bundle
 - [ ] Add error handling and logging
 - [ ] Accept parameters for service name and working directory
 - [ ] Document function usage in comments
@@ -88,9 +87,9 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 ## Phase 2: Jenkinsfile Implementation
 
 ### Task 10: Create single Jenkinsfile at repository root
-- [ ] Create `Jenkinsfile` in repository root
-- [ ] Add @Library annotation to load Shared Library
-- [ ] Define pipeline structure with declarative syntax
+- [x] Create `Jenkinsfile` in repository root
+- [x] Add @Library annotation to load Shared Library
+- [x] Define pipeline structure with declarative syntax
 - [ ] Add agent configuration (label for required tools)
 - [ ] Define environment variables (Kind cluster name, namespaces)
 - [ ] Add post actions for cleanup

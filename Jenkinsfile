@@ -21,8 +21,12 @@ pipeline{
             steps{
                 script{
                     if (changedServices.contains('products')) {
-                        sh 'echo "========Building Node Service ========"'
-                        buildNodeService()
+                        sh 'echo "========Building Products Service ========"'
+                        buildNodeService('products-cna-microservice')
+                    }
+                    if (changedServices.contains('cart')) {
+                        sh 'echo "========Building Cart Service ========"'
+                        buildNodeService('search-cna-microservice')
                     }
                     if (changedServices.contains('store-ui')) {
                         sh 'echo "========Building UI Service ========"'
