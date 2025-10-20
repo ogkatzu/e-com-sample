@@ -21,19 +21,19 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 - [ ] Document function usage in comments
 
 ### Task 3: Create buildJavaService() function in Shared Library
-- [ ] Create `vars/buildJavaService.groovy` file
-- [ ] Implement Gradle build step
-- [ ] Implement Gradle test step
-- [ ] Handle Java 17 requirement verification
+- [x] Create `vars/buildJavaService.groovy` file
+- [x] Implement Gradle build step
+- [x] Implement Gradle test step
+- [x] Handle Java 17 requirement verification
 - [ ] Add error handling and logging
-- [ ] Accept parameters for service name and working directory
+- [x] Accept parameters for service name and working directory
 - [ ] Document function usage in comments
 
 ### Task 4: Create buildPythonService() function in Shared Library
-- [ ] Create `vars/buildPythonService.groovy` file
-- [ ] Implement pipenv install step
-- [ ] Implement Python test execution (if tests exist)
-- [ ] Handle virtual environment activation
+- [x] Create `vars/buildPythonService.groovy` file
+- [x] Implement pipenv install step
+- [x] Implement Python test execution (if tests exist)
+- [x] Handle virtual environment activation
 - [ ] Add error handling and logging
 - [ ] Accept parameters for service name and working directory
 - [ ] Document function usage in comments
@@ -67,10 +67,10 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 - [ ] Document function usage in comments
 
 ### Task 8: Create getChangedServices() function in Shared Library
-- [ ] Create `vars/getChangedServices.groovy` file
-- [ ] Implement git diff logic to detect changed files
-- [ ] Map changed files to microservice directories
-- [ ] Return list of affected services
+- [x] Create `vars/getChangedServices.groovy` file
+- [x] Implement git diff logic to detect changed files
+- [x] Map changed files to microservice directories
+- [x] Return list of affected services
 - [ ] Handle PR vs push scenarios
 - [ ] Add logging for debugging
 - [ ] Document function usage in comments
@@ -90,7 +90,7 @@ This document outlines the tasks required to implement a Jenkins CI/CD pipeline 
 - [x] Create `Jenkinsfile` in repository root
 - [x] Add @Library annotation to load Shared Library
 - [x] Define pipeline structure with declarative syntax
-- [ ] Add agent configuration (label for required tools)
+- [x] Add agent configuration (label for required tools)
 - [ ] Define environment variables (Kind cluster name, namespaces)
 - [ ] Add post actions for cleanup
 - [ ] Add pipeline description and comments

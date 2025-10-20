@@ -1,94 +1,66 @@
-@Library('shared-library') _
-
-pipeline{
+pipeline {
     agent none
-    
-    stages{
-        stage("Checkout"){
+
+    stages {
+        stage("Checkout") {
             agent any
-            steps{
+            steps {
                 checkout scm
             }
         }
-        stage("Get Changed Services"){
+
+        stage("Get Changed Services") {
             agent any
-            steps{
-                script{
+            steps {
+                script {
                     changedServices = getChangedServices()
                     echo "Services to build: ${changedServices}"
                 }
             }
         }
-        stage("Build and Unit Test Javascript Services"){
-            parallel{
-                stage("Build products Service"){
-                    agent any
-                    when {
-                        expression { changedServices.contains('products') }
-                    }
-                    steps {
-                        script{
-                            sh 'echo "========Building Products Service ========"'
-                            buildNodeService('products-cna-microservice')
+
+        stage("Build Services") {
+            steps {
+                script {
+                    def serviceConfigs = getServiceConfig()
+
+                    // Create parallel stages dynamically
+                    def parallelStages = [:]
+
+                    changedServices.each { serviceName ->
+                        if (serviceConfigs.containsKey(serviceName)) {
+                            def config = serviceConfigs[serviceName]
+
+                            parallelStages["Build ${serviceName}"] = {
+                                if (config.agent == 'any') {
+                                    node {
+                                        buildService(serviceName, config)
+                                    }
+                                } else {
+                                    node(config.agent) {
+                                        buildService(serviceName, config)
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-                stage("Build UI Service") {
-                    agent any
-                    when {
-                        expression { changedServices.contains('store-ui') }
-                    }
-                    steps {
-                        sh 'echo "========Building UI Service ========"'
-                        buildReactService('store-ui')
-                    }
-                }
-                stage("Build search Service"){
-                    agent any
-                    when {
-                        expression { changedServices.contains('search') }
-                    }
-                    steps {
-                        sh 'echo "========Building search Service ========"'
-                        buildNodeService('search-cna-microservice')
-                    }
-                }
-                stage("Build cart Service"){
-                    agent {
-                        label 'jdk-17'
-                    }
-                    when {
-                        expression { changedServices.contains('cart') }
-                    }
-                    steps {
-                        sh 'echo "========Building cart Service ========"'
-                        buildJavaService('cart-cna-microservice')
-                    }
-                }
-                stage("Build Users Service") {
-                    agent {
-                        label 'python'
-                    }
-                    when {
-                        expression { changedServices.contains('users') }
-                    }
-                    steps {
-                        sh 'echo "========Building Users Service ========"'
-                        buildPythonService('users-cna-microservice')
-                    }
+
+                    // Execute all builds in parallel
+                    parallel parallelStages
                 }
             }
         }
     }
-    post{
-        always{
-            echo "========always========"
+
+    post {
+        always {
+            echo "Pipeline completed"
         }
-        success{
-            echo "========pipeline executed successfully ========"
+        success {
+            echo "Pipeline executed successfully"
         }
-        failure{
-            echo "========pipeline execution failed========"
+        failure {
+            echo "Pipeline execution failed"
         }
     }
 }
