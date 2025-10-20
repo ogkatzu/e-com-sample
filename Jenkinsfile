@@ -36,10 +36,12 @@ pipeline {
                             parallelStages["Build ${serviceName}"] = {
                                 if (config.agent == 'any') {
                                     node {
+                                        checkout scm  // Checkout in each node
                                         buildService(serviceName, config)
                                     }
                                 } else {
                                     node(config.agent) {
+                                        checkout scm  // Checkout in each node
                                         buildService(serviceName, config)
                                     }
                                 }
